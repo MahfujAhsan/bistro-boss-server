@@ -129,6 +129,35 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/menu/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: id}
+            const result = await menuCollection.findOne(query);
+            res.send(result);
+        })
+
+        // app.get('/menu/:id', async (req, res) => {
+        //     try {
+        //         const id = req.params.id;
+        //         console.log("Received ID:", id);
+
+        //         const query = { _id: id };
+        //         console.log("Query:", query);
+
+        //         const result = await menuCollection.findOne(query);
+        //         console.log("Result:", result);
+
+        //         if (result) {
+        //             res.send(result);
+        //         } else {
+        //             res.status(404).send("Item not found");
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //         res.status(500).send("Internal server error");
+        //     }
+        // });
+
         app.post("/menu", verifyJWT, verifyAdmin, async (req, res) => {
             const newItem = req.body;
             const result = await menuCollection.insertOne(newItem);
@@ -141,6 +170,13 @@ async function run() {
             const result = await menuCollection.deleteOne(query);
             res.send(result);
         })
+
+        // app.patch('/menu/:id', async (req, res) => {
+        //     const { id } = req.params.id;
+        //     const query = { _id: new ObjectId(id) };
+        //     const result = await menuCollection.updateOne()
+
+        // })
 
         // review related apis
         app.get("/reviews", async (req, res) => {
