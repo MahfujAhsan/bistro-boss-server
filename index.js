@@ -70,15 +70,7 @@ async function run() {
             }
             next();
         }
-
-        /**
-         * 0. Do not show secure links to those who should not see the links.
-         * 1. use jwt token: verifyJWT
-         * 2. use verifyAdmin middleware
-         */
-
-
-
+        
         // users related apis
         app.post("/users", async (req, res) => {
             const user = req.body;
@@ -131,32 +123,10 @@ async function run() {
 
         app.get('/menu/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: id}
+            const query = { _id: new ObjectId(id) }
             const result = await menuCollection.findOne(query);
             res.send(result);
         })
-
-        // app.get('/menu/:id', async (req, res) => {
-        //     try {
-        //         const id = req.params.id;
-        //         console.log("Received ID:", id);
-
-        //         const query = { _id: id };
-        //         console.log("Query:", query);
-
-        //         const result = await menuCollection.findOne(query);
-        //         console.log("Result:", result);
-
-        //         if (result) {
-        //             res.send(result);
-        //         } else {
-        //             res.status(404).send("Item not found");
-        //         }
-        //     } catch (error) {
-        //         console.error(error);
-        //         res.status(500).send("Internal server error");
-        //     }
-        // });
 
         app.post("/menu", verifyJWT, verifyAdmin, async (req, res) => {
             const newItem = req.body;
@@ -168,17 +138,31 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await menuCollection.deleteOne(query);
-            res.send(result);
+            res.send({ result });
         })
 
-        // app.patch('/menu/:id', async (req, res) => {
-        //     const { id } = req.params.id;
-        //     const query = { _id: new ObjectId(id) };
-        //     const result = await menuCollection.updateOne()
+        app.patch('/menu/:id', async (req, res) => {
+            const itemId = req.params.id;
+            try {
+                const updateData = req.body;
 
-        // })
+                const updatedItem = await menuCollection.findOneAndUpdate(
+                    { _id: new ObjectId(itemId) },
+                    { $set: updateData },
+                    { new: true }
+                );
 
-        // review related apis
+                if (!updatedItem) {
+                    return res.status(404).json({ message: 'Item not found' });
+                }
+
+                res.json(updatedItem);
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: 'Server error' });
+            }
+        });
+
         app.get("/reviews", async (req, res) => {
             const result = await reviewsCollection.find().toArray();
             res.send(result)
