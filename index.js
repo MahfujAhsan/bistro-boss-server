@@ -70,7 +70,7 @@ async function run() {
             }
             next();
         }
-        
+
         // users related apis
         app.post("/users", async (req, res) => {
             const user = req.body;
@@ -231,11 +231,23 @@ async function run() {
         })
 
         app.get('/order-stats', verifyJWT, verifyAdmin, async (req, res) => {
+
             const pipeline = [
+                {
+                    $addFields: {
+                        menuItemsIds: {
+                            $map: {
+                                input: '$menuItems',
+                                as: 'itemId',
+                                in: { $convert: { input: '$$itemId', to: 'objectId' } }
+                            }
+                        }
+                    }
+                },
                 {
                     $lookup: {
                         from: 'menu',
-                        localField: 'menuItems',
+                        localField: 'menuItemsIds',
                         foreignField: '_id',
                         as: 'menuItemsData'
                     }
