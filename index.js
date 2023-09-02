@@ -51,6 +51,7 @@ async function run() {
         const reviewsCollection = client.db("bistroDb").collection("reviews");
         const cartCollection = client.db("bistroDb").collection("carts");
         const paymentCollection = client.db("bistroDb").collection("payments");
+        const bookingCollection = client.db("bistroDb").collection("booking");
 
         app.post('/jwt', (req, res) => {
             const user = req.body;
@@ -70,6 +71,45 @@ async function run() {
             }
             next();
         }
+
+        // booking related apis
+        app.post('/booking', async (req, res) => {
+            const booking = req.body;
+            const result = await bookingCollection.insertOne(booking);
+            res.send(result);
+        })
+
+        app.get('/booking', verifyJWT, async (req, res) => {
+            const email = req.query.email;
+            if(!email) {
+                res.send([])
+            }
+
+            const decodedEmail = req.decoded.email;
+            if(email !== decodedEmail) {
+                return res.send(403).send({error: true, message: 'forbidden access'});
+            }
+
+            const query = {email: email};
+            const result = await bookingCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // app.get('/carts', verifyJWT, async (req, res) => {
+        //     const email = req.query.email;
+        //     if (!email) {
+        //         res.send([])
+        //     }
+
+        //     const decodedEmail = req.decoded.email;
+        //     if (email !== decodedEmail) {
+        //         return res.status(403).send({ error: true, message: 'forbidden access' })
+        //     }
+
+        //     const query = { email: email };
+        //     const result = await cartCollection.find(query).toArray();
+        //     res.send(result);
+        // })
 
         // users related apis
         app.post("/users", async (req, res) => {
