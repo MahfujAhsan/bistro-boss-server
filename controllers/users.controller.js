@@ -1,5 +1,29 @@
 const User = require("../models/userModel");
 
+// module.exports.createUser = async (req, res, next) => {
+//     try {
+//         const userData = req.body;
+
+//         // Check if a user with the same email already exists
+//         const existingUser = await User.findOne({ email: userData.email });
+
+//         if (existingUser) {
+//             return res.status(400).json({ message: 'User already exists' });
+//         }
+
+//         // Create a new user instance using the Mongoose model
+//         const user = new User(userData);
+
+//         // Save the user to the database
+//         const result = await user.save();
+
+//         // Respond with the result
+//         res.status(201).json(result);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: true, message: 'Internal server error' });
+//     }
+// }
 module.exports.createUser = async (req, res, next) => {
     try {
         const userData = req.body;
@@ -8,13 +32,24 @@ module.exports.createUser = async (req, res, next) => {
         const existingUser = await User.findOne({ email: userData.email });
 
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
+            // Link the Google account to the existing user account here if needed
+            // You can update the existing user's profile with Google information
+
+            // For example, you can update the existing user's name and image
+            existingUser.name = userData.name;
+            existingUser.image = userData.image;
+
+            // Save the updated user profile
+            const updatedUser = await existingUser.save();
+
+            // Respond with the updated user data
+            return res.status(200).json(updatedUser);
         }
 
-        // Create a new user instance using the Mongoose model
+        // If no existing user is found, create a new user
         const user = new User(userData);
 
-        // Save the user to the database
+        // Save the new user to the database
         const result = await user.save();
 
         // Respond with the result
@@ -22,8 +57,18 @@ module.exports.createUser = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: true, message: 'Internal server error' });
+        next(error);
     }
 }
+
+//         // Handle specific Mongoose validation errors
+//         if (error.name === 'ValidationError') {
+//             return res.status(400).json({ message: error.message });
+//         }
+
+//         res.status(500).json({ error: true, message: 'Internal server error' });
+//     }
+// }
 
 module.exports.getUsers = async (req, res, next) => {
     try {
@@ -90,8 +135,6 @@ module.exports.deleteUser = async (req, res, next) => {
 
         // Use Mongoose to find the user by ID
         const user = await User.findById(userId);
-
-        console.log(user)
 
         if (!user) {
             // User not found

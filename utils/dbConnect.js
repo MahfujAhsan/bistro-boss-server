@@ -19,27 +19,3 @@ const connectDB = async (dbName) => {
 module.exports = connectDB;
 
 
-
-
-// let dbConnection;
-
-// module.exports = {
-//     connectToServer: function (callback) {
-//         client.connect(function (err, db) {
-//             if (err || !db) {
-//                 return callback(err);
-//             }
-
-//             dbConnection = db.db("menu");
-//             console.log("Successfully connected to MongoDB.");
-
-//             return callback();
-//         });
-//     },
-
-//     getDb: function () {
-//         return dbConnection;
-//     },
-// };
-
-

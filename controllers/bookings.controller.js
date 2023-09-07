@@ -1,54 +1,6 @@
 const Booking = require('../models/bookingModel');
 const { getDb } = require('../utils/dbConnect');
 
-// const bookingCollection = getDb.collection('booking');
-
-// module.exports.getBookings = async (req, res, next) => {
-//     // const booking = req.body;
-//     // const result = await getDb.collection('booking').bookingCollection.insertOne(booking);
-//     // res.send(result);
-//     // try {
-//     //     const db = getDb();
-//     //     const email = req.query.email;
-//     //         if(!email) {
-//     //             res.send([])
-//     //         }
-
-//     //         const decodedEmail = req.decoded.email;
-//     //         if(email !== decodedEmail) {
-//     //             return res.send(403).send({error: true, message: 'forbidden access'});
-//     //         }
-
-//     //         const query = {email: email};
-//     //         const result = await db.collection("booking").find(query).toArray();
-//     //         res.send(result);
-//     // } catch (err) {
-
-//     // };
-//     const email = req.query.email;
-
-//     if (!email) {
-//         return res.status(200).send([]); // Respond with an empty array if no email is provided
-//     }
-
-//     const decodedEmail = req.decoded.email;
-
-//     if (email !== decodedEmail) {
-//         return res.status(403).json({ error: true, message: 'Forbidden access' });
-//     }
-
-//     try {
-//         // Use Mongoose to query the database for bookings with the provided email
-//         const bookings = await Booking.find({ email });
-
-//         // Respond with the bookings
-//         res.status(200).json(bookings);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: true, message: 'Internal server error' });
-//     }
-// };
-
 module.exports.getBookings = async (req, res, next) => {
     try {
         const email = req.query.email;
@@ -101,4 +53,25 @@ module.exports.saveABooking = async (req, res, next) => {
 
 module.exports.getSingleBooking = (req, res) => {
     res.send("booking by id")
+};
+
+module.exports.deleteBookingItem = async (req, res, next) => {
+    try {
+        const bookingItemId = req.params.id;
+
+        // Use Mongoose to find and delete the cart item by its ID
+        const deletedBookingItem = await Booking.findByIdAndRemove(bookingItemId);
+
+        if (!deletedBookingItem) {
+            // If the cart item doesn't exist, respond with an error
+            return res.status(404).json({ error: true, message: 'Booking item not found' });
+        }
+
+        // Respond with a success message or deleted item information
+        res.status(200).json({ message: 'Cart item deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: true, message: 'Internal server error' });
+        next(err);
+    }
 };

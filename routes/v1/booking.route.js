@@ -6,14 +6,6 @@ const verifyJWT = require('../../middleware/verifyJWT');
 
 const router = express.Router();
 
-// router.post('/booking', (req, res) => {
-//     res.send("booking successfully")
-// });
-
-// router.get('/', (req, res) => {
-//     res.send("booking found")
-// });
-
 router
    .route("/")
    /**
@@ -51,5 +43,6 @@ router
 
 router.route("/:id")
    .get(viewCount, limiter, bookingController.getSingleBooking)
+   .delete(bookingController.deleteBookingItem)
 
 module.exports = router;
