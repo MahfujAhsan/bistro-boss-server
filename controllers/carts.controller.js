@@ -38,7 +38,7 @@ module.exports.createCartItem = async (req, res, next) => {
 
         // Save the new cart item to the database
         const savedCartItem = await newCartItem.save();
-
+        
         // Respond with the saved cart item
         res.status(201).json(savedCartItem);
     } catch (err) {

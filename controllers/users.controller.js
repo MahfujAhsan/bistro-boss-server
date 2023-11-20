@@ -1,29 +1,5 @@
 const User = require("../models/userModel");
 
-// module.exports.createUser = async (req, res, next) => {
-//     try {
-//         const userData = req.body;
-
-//         // Check if a user with the same email already exists
-//         const existingUser = await User.findOne({ email: userData.email });
-
-//         if (existingUser) {
-//             return res.status(400).json({ message: 'User already exists' });
-//         }
-
-//         // Create a new user instance using the Mongoose model
-//         const user = new User(userData);
-
-//         // Save the user to the database
-//         const result = await user.save();
-
-//         // Respond with the result
-//         res.status(201).json(result);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: true, message: 'Internal server error' });
-//     }
-// }
 module.exports.createUser = async (req, res, next) => {
     try {
         const userData = req.body;
@@ -60,15 +36,6 @@ module.exports.createUser = async (req, res, next) => {
         next(error);
     }
 }
-
-//         // Handle specific Mongoose validation errors
-//         if (error.name === 'ValidationError') {
-//             return res.status(400).json({ message: error.message });
-//         }
-
-//         res.status(500).json({ error: true, message: 'Internal server error' });
-//     }
-// }
 
 module.exports.getUsers = async (req, res, next) => {
     try {

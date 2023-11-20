@@ -1,8 +1,8 @@
 const express = require('express');
 const bookingController = require('../../controllers/bookings.controller');
-const viewCount = require('../../middleware/viewCount');
-const limiter = require('../../middleware/limiter');
-const verifyJWT = require('../../middleware/verifyJWT');
+const viewCount = require('../../middlewares/verifyAdmin');
+const limiter = require('../../middlewares/limiter');
+const verifyJWT = require('../../middlewares/verifyJWT');
 
 const router = express.Router();
 

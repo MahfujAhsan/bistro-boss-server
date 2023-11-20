@@ -1,7 +1,7 @@
 const express = require('express');
 const usersController = require('../../controllers/users.controller');
-const verifyJWT = require('../../middleware/verifyJWT');
-const verifyAdmin = require('../../middleware/verifyAdmin');
+const verifyJWT = require('../../middlewares/verifyJWT');
+const verifyAdmin = require('../../middlewares/verifyAdmin');
 const router = express.Router();
 
 router.route('/')

@@ -1,4 +1,5 @@
 const express = require('express');
+// const multer = require('multer');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
@@ -12,7 +13,8 @@ const paymentIntendedRoutes = require("./routes/v1/paymentIntend.route.js");
 const paymentRoutes = require("./routes/v1/payments.route.js");
 const adminStatsRoutes = require("./routes/v1/adminStats.route.js");
 const orderStatsRoutes = require("./routes/v1/orderStats.route.js");
-const reviewRoutes = require("./routes/v1/reviews.route");
+const reviewRoutes = require("./routes/v1/reviews.route.js");
+const imagesRoutes = require("./routes/v1/images.route.js");
 const port = process.env.PORT || 5000;
 
 
@@ -33,6 +35,7 @@ app.use('/api/v1/create-payment-intent', paymentIntendedRoutes)
 app.use('/api/v1/payments', paymentRoutes)
 app.use('/api/v1/admin-stats', adminStatsRoutes)
 app.use('/api/v1/order-stats', orderStatsRoutes)
+app.use('/api/v1/images', imagesRoutes)
 
 
 app.get('/', (req, res) => {
@@ -40,6 +43,10 @@ app.get('/', (req, res) => {
 })
 
 const database = 'bistroDb';
+
+// const storage = multer.memoryStorage();
+
+// const upload = multer({ storage: storage })
 
 const startServer = async (req, res) => {
     try {
